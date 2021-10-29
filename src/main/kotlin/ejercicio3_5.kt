@@ -1,20 +1,27 @@
 //Ejercicio 3.5
 
 class Coche(
-    val marca: String?, val modelo: String, var gasolina: Float,
-    val color: String = "Blanco", var tanque: Float, var variacionVelocidad: Int = 5,
+    val marca: String, val modelo: String, var gasolina: Double,
+    val color: String = "Blanco", var tanque: Double, var variacionVelocidad: Int = 5,
     var velocidadMax: Int, var factorGasto: Double, var numeroMarchas: Int
 ) {
     var velocidad = 0
     var marcha = 0
-    var gasto = 0.0
-    private var estado = "Apagado"
+    var estado = "Apagado"
 
     init {
-        require(marca != null) { "Debes introducir un valor para marca." }
-        //require(velocidad > 250 && velocidad < 10){"La velocidad debe estar en un valor entre 10 y 250"}
-    }
 
+        //require(marca != null) { "Debes introducir un valor para marca." } -> Nunca se da esta situación.
+        require(numeroMarchas in 1..5) { "El numero de marchas debe estar entre el 1 y el 5." }
+        require(velocidadMax in 10..250) { "La velocidad máxima debe estar entre 10 y 250." }
+        require(factorGasto > 0.0) { "El factor gasto debe ser mayor a 0." }
+        require(variacionVelocidad > 0) { "La variación de velocidad debe ser mayor a 0." }
+        require(gasolina > 0.0 && gasolina <= tanque) { "No has introducido un valor correcto para la gasolina." }
+        require(tanque > 0) { "El tanque debe ser mayor a 0." }
+        require(color.isNotEmpty()) { "No puedes introducir un string vacío." }
+        require(marca.isNotEmpty()) { "No puedes introducir un string vacío." }
+
+    }
 
     fun encender(): Boolean {
         return if (marcha == 0 && estado == "Apagado") {
@@ -23,9 +30,11 @@ class Coche(
         } else false
     }
 
-    fun apagar() {
-        parar()
-        if (estado == "Encendido") estado = "Apagado"
+    fun apagar(): String {
+        if (estado == "Encendido") {
+            if (velocidad == 0 && marcha == 0) estado = "Apagado"
+        }
+        return estado
     }
 
     fun iniciar() {
@@ -33,26 +42,27 @@ class Coche(
     }
 
     fun acelerar(): Int {
-        return if (gasolina > 0) {
-            if (velocidad < velocidadMax) velocidad += variacionVelocidad
-            if (velocidad > velocidadMax) velocidad = velocidadMax
-            velocidad
-        } else {
-            parar()
-            velocidad
+        if (estado == "Encendido" && marcha > 0) {
+            if (gasolina > 0) {
+                if (velocidad < velocidadMax) velocidad += variacionVelocidad
+                if (velocidad > velocidadMax) velocidad = velocidadMax
+            } else {
+                parar()
+            }
         }
+        return velocidad
     }
 
-    fun gasto(marcha: Int): Double {
-        when (marcha) {
-            1 -> gasto = 5 * factorGasto
-            2 -> gasto = 4 * factorGasto
-            3 -> gasto = 3 * factorGasto
-            4 -> gasto = 2 * factorGasto
-            5 -> gasto = 1 * factorGasto
-            else -> gasto = 0.0
+    private fun gasto(marcha: Int){
+        gasolina -= when (marcha) {
+            1 -> 5 * factorGasto
+            2 -> 4 * factorGasto
+            3 -> 3 * factorGasto
+            4 -> 2 * factorGasto
+            5 -> 1 * factorGasto
+            else -> 0.0
         }
-        return gasto
+        if (gasolina < 0.0) gasolina = 0.0
     }
 
     fun incrementaMarcha() {
@@ -60,13 +70,15 @@ class Coche(
     }
 
     fun decrementaMarcha() {
-        if (marcha > 0) marcha--
+        if (marcha > 1) marcha-- //Cambiado con respecto al enunciado
     }
 
     fun frenar(): Int {
-        if (velocidad > 0) velocidad -= variacionVelocidad
-        if (velocidad < 0) velocidad = 0
-        gasto(marcha)
+        if (estado == "Encendido") {
+            if (velocidad > 0) velocidad -= variacionVelocidad
+            if (velocidad < 0) velocidad = 0
+            gasto(marcha)
+        }
         return velocidad
     }
 
@@ -82,4 +94,36 @@ class Coche(
 
 fun main() {
 
+    var coche1 = Coche(
+        "Citroen",
+        "Passat",
+        50.0,
+        tanque = 50.0,
+        variacionVelocidad = 7,
+        velocidadMax = 210,
+        factorGasto = 2.0,
+        numeroMarchas = 5
+    )
+
+    println(coche1.estado)
+    coche1.encender()
+    println(coche1.estado)
+    coche1.iniciar()
+    println(coche1.velocidad)
+    coche1.acelerar()
+    println(coche1.velocidad)
+    coche1.incrementaMarcha()
+    coche1.acelerar()
+    println("gasolina: " + coche1.gasolina)
+    println(coche1.velocidad)
+    coche1.frenar()
+    println(coche1.velocidad)
+    coche1.apagar()
+    println(coche1.estado)
+    println(coche1.gasolina)
+    coche1.parar()
+    println(coche1.gasolina)
+    println(coche1.velocidad)
+    coche1.apagar()
+    println(coche1.estado)
 }
