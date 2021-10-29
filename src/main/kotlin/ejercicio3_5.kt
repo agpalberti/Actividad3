@@ -106,7 +106,7 @@ class Coche(
 
 fun main() {
 
-    var coche1 = Coche(
+    val coche1 = Coche(
         "Citroen",
         "Passat",
         50.0,
@@ -117,7 +117,7 @@ fun main() {
         numeroMarchas = 5
     )
 
-    var coche2 = Coche(
+    val coche2 = Coche(
         "Volkswagen",
         "A2",
         60.0,
@@ -146,8 +146,10 @@ fun main() {
     coche2.iniciar()
     coche2.acelerar()
     coche2.incrementaMarcha()
+    coche2.incrementaMarcha()
     coche2.acelerar()
     coche2.acelerar()
+    coche2.decrementaMarcha()
 
     println(Coche.comparar(coche1, coche2))
 
