@@ -117,6 +117,17 @@ fun main() {
         numeroMarchas = 5
     )
 
+    var coche2 = Coche(
+        "Volkswagen",
+        "A2",
+        60.0,
+        tanque = 75.0,
+        variacionVelocidad = 6,
+        velocidadMax = 220,
+        factorGasto = 1.8,
+        numeroMarchas = 5
+    )
+
     println(coche1.estado)
     coche1.encender()
     println(coche1.estado)
@@ -130,6 +141,19 @@ fun main() {
     println(coche1.velocidad)
     coche1.frenar()
     println(coche1.velocidad)
+
+    coche2.encender()
+    coche2.iniciar()
+    coche2.acelerar()
+    coche2.incrementaMarcha()
+    coche2.acelerar()
+    coche2.acelerar()
+
+    println(Coche.comparar(coche1, coche2))
+
+    coche2.parar()
+    coche2.apagar()
+
     coche1.apagar()
     println(coche1.estado)
     println(coche1.gasolina)
