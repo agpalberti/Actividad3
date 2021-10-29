@@ -4,7 +4,15 @@ class Coche(
     val marca: String, val modelo: String, var gasolina: Double,
     val color: String = "Blanco", var tanque: Double, var variacionVelocidad: Int = 5,
     var velocidadMax: Int, var factorGasto: Double, var numeroMarchas: Int
-) {
+)
+{
+    companion object{
+        fun comparar(coche1:Coche, coche2:Coche):String{
+            return if(coche1.velocidad > coche2.velocidad) "$coche1 es más rápido"
+            else "$coche2 es más rápido"
+        }
+    }
+
     var velocidad = 0
     var marcha = 0
     var estado = "Apagado"
@@ -88,6 +96,10 @@ class Coche(
         }
         marcha = 0
         return velocidad == 0
+    }
+
+    override fun toString(): String {
+        return "$marca $modelo"
     }
 }
 
